@@ -1,9 +1,20 @@
-import fs from "fs"; import path from "path"; import fetch from "node-fetch"; import pLimit from "p-limit";
+export async function searchAll(notion) {
+  let results = [];
+  let cursor = undefined;
 
-const limiters = new Map();
+  while (true) {
+    const res = await notion.search({
+      start_cursor: cursor,
+      page_size: 100
+    });
 
-export function makeDownloader(concurrency = 4) { const limit = pLimit(concurrency);
+    results = results.concat(
+      res.results.filter(item => item.object === "page")
+    );
 
-async function download(url, dest) { return limit(async () => { // skip if exists if (fs.existsSync(dest)) return dest; const res = await fetch(url); if (!res.ok) throw new Error(failed to download ${url}: ${res.status}); const buffer = await res.arrayBuffer(); fs.mkdirSync(path.dirname(dest), { recursive: true }); fs.writeFileSync(dest, Buffer.from(buffer)); return dest; }); }
+    if (!res.has_more) break;
+    cursor = res.next_cursor;
+  }
 
-return { download }; }
+  return results;
+}

@@ -1,7 +1,34 @@
-import sanitize from "sanitize-filename"; import path from "path";
+import fs from "fs-extra";
+import path from "path";
+import yaml from "yaml";
 
-export function safeName(name) { if (!name) return "untitled"; const s = name.replace(/\n/g, " ").trim(); const san = sanitize(s) || "untitled"; return san; }
+export function loadConfig(baseDir) {
+  const configPath = path.join(baseDir, "..", "config.yml");
+  const raw = fs.readFileSync(configPath, "utf8");
+  const config = yaml.parse(raw);
 
-export function extFromUrl(url) { try { const p = new URL(url).pathname; const ext = path.extname(p) || ""; return ext || ""; } catch (e) { return ""; } }
+  const OUTPUT_DIR = path.join(baseDir, "..", config.output_dir || "backup");
+  const PAGES_DIR = path.join(OUTPUT_DIR, "pages");
+  const ASSETS_DIR = path.join(OUTPUT_DIR, "assets");
 
-export function richTextToPlain(rtArray = []) { return rtArray.map(rt => rt.plain_text || "").join(""); }
+  fs.ensureDirSync(OUTPUT_DIR);
+
+  return {
+    OUTPUT_DIR,
+    PAGES_DIR,
+    ASSETS_DIR,
+    CONFIG: config,
+    DOWNLOAD_ASSETS: config.download_assets ?? true,
+    PER_PAGE_IMAGES: config.per_page_images ?? false
+  };
+}
+
+export function extFromUrl(url) {
+  const m = url.match(/\.(jpg|jpeg|png|gif|webp|svg|bmp|tiff)(\?|$)/i);
+  return m ? "." + m[1] : null;
+}
+
+export function renderRichText(rich) {
+  if (!rich || !rich.length) return "";
+  return rich.map(t => t.plain_text || "").join("");
+}
