@@ -1,3 +1,15 @@
-Configuration for backup
+# Notion Backup Configuration
 
-include: pages: true databases: true options: output_dir: "./backup" download_assets: true assets_dir: "assets" per_page_image_dir: true concurrency: 6 keep_remote_urls: false
+output_dir: "./data"
+pages_dir: "./data/pages"
+assets_dir: "./data/assets"
+
+# 是否下载图片
+download_assets: true
+
+# 是否将图片放进每个页面自己的文件夹
+per_page_images: true
+
+search:
+  types:
+    - "page"
