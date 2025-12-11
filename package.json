@@ -1,0 +1,2 @@
+/* ===== FILE: package.json ===== */
+ { "name": "notion-backup", "version": "1.0.0", "description": "Notion workspace backup to GitHub (full implementation, images included)", "type": "module", "scripts": { "start": "node src/index.js" }, "dependencies": { "@notionhq/client": "^3.8.0", "csv-writer": "^1.6.0", "js-yaml": "^4.1.0", "node-fetch": "^3.3.1", "p-limit": "^3.1.0", "sanitize-filename": "^1.6.3" } }

@@ -1,0 +1,3 @@
+Configuration for backup
+
+include: pages: true databases: true options: output_dir: "./backup" download_assets: true assets_dir: "assets" per_page_image_dir: true concurrency: 6 keep_remote_urls: false
