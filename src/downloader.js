@@ -1,11 +1,28 @@
 import fs from "fs-extra";
-import fetch from "node-fetch";
+import axios from "axios";
 
 export class Downloader {
+  constructor(token) {
+    this.token = token;
+  }
+
   async download(url, dest) {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const buf = Buffer.from(await res.arrayBuffer());
-    await fs.writeFile(dest, buf);
+    try {
+      const response = await axios({
+        url,
+        method: "GET",
+        responseType: "arraybuffer",
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+          "Notion-Version": "2022-06-28"
+        }
+      });
+
+      await fs.ensureDir(fs.dirname(dest));
+      await fs.writeFile(dest, response.data);
+      console.log("✔ Image saved:", dest);
+    } catch (err) {
+      console.warn("❌ Image download failed:", url, "\nError:", err.message);
+    }
   }
 }
