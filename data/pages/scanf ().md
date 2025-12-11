@@ -1,0 +1,12 @@
+# scanf ()
+
+scanf()
+
+```c
+#include <stdio.h>
+int main();
+
+```
+
+‍
+
