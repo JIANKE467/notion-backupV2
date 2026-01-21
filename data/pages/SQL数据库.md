@@ -15,3 +15,6 @@
 
 [Child page: SQL代数表达式符号对照表](./SQL代数表达式符号对照表.md)
 
+
+[Child page: ER图](./ER图.md)
+
